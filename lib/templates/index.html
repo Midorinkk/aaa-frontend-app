@@ -15,12 +15,85 @@
       </div>
     </nav>
 
-    <!-- отсюда можно удалять -->
-    <div class="container">
-      <p class="text-center">Шаблон подключился! Теперь на его базе можно начинать делать веб приложение.</p>
-      <p class="text-center">Удали этот блок и скопируй сюда содержимое тега <code>body</code> из домашнего задания с занятия 2.</p>
+  {% if not error and not image %}
+  <div class="container mb-3 text-center">
+    <h1 class="display-1"> Привет, ААА!</h1>
+  </div>
+  {% endif %}
+
+  {% if error %}
+  <div class="container col-8">
+    <div class="alert alert-danger border rounded-3" role="alert">
+      {{ error }}
     </div>
-    <!-- всё что ниже лучше оставить -->
+  </div>
+  {% endif %}
+
+  {% if image %}
+  <div class="container mb-3 text-center col-8">
+    <img class="img-fluid rounded-3" src="{{ image }}"/>
+  </div>
+  {% endif %}
+
+  <div class="container mb-3 col-8">
+    <form class="border border-2 p-3 rounded-3" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Загрузите изображение .jpeg для распознавания текста</label>
+        <input class="form-control" type="file" name="image" id="image" accept="image/jpeg">
+      </div>
+      <button type="submit" class="btn btn-primary">распознать</button>
+    </form>
+  </div>
+
+  <!--
+        <tr>
+          <td> <img class="img-fluid" src="..."/></td>
+          <td>Otto</td>
+          <td class="table-success">99.9%</td>
+        </tr>
+        <tr>
+          <td> <img class="img-fluid" src="..."/></td>
+          <td>Marco</td>
+          <td class="table-warning">80.1%</td>
+        </tr>
+        <tr>
+          <td> <img class="img-fluid" src="..."/></td>
+          <td>Jacob</td>
+          <td class="table-danger">44.4%</td>
+        </tr>
+  -->
+
+  <div class="container mb-3 col-8">
+    {% if words %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Изображение</th>
+          <th scope="col">Текст</th>
+          <th scope="col">Точность</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for word in words %}
+        <tr>
+          <td> <img src="{{ word.image }}"/></td>
+          <td>{{ word.word }}</td>
+          <td class="{% if word.accuracy > 0.90 %}
+                        table-success
+                      {% elif word.accuracy > 0.60 %}
+                        table-warning
+                      {% else %}
+                        table-danger
+                      {% endif %}
+                      "
+          >
+            {{ "%2.2f" | format(word.accuracy * 100) }}%</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
 
     <footer class="container mt-5">
         <p class="text-center text-muted">© 2024 Академия Аналитиков Авито</p>
